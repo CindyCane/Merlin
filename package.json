@@ -1,0 +1,14 @@
+{
+    "name": "Merlin",
+    "version": "2.0.0",
+    "description": "An app for tutors and students to share code",
+    "author": "Cindy",
+    "scripts": {
+        "start": "node index.js"
+    },
+    "dependencies": {
+        "ejs": "^2.5.7",
+        "express": "^4.15.2",
+        "socket.io": "^2.0.4"
+    }
+}

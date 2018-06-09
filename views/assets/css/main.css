@@ -1,0 +1,188 @@
+body {
+    background-color: #333334;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    height: 5vw;
+    font-family: 'Montserrat', sans-serif;
+    text-transform: uppercase;
+    margin: 0;
+    padding: 0;
+    background-color: #5bb058;
+    text-align: center;
+    font-size: 2.75vw;
+    letter-spacing: 0.25rem;
+    color: #ffffff;
+    padding-top: 1.5vw;
+    font-weight: 600;
+}
+
+h2 {
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 2vw;
+    background-color: #262626;
+    -webkit-border-top-right-radius: 8px;
+    -webkit-border-top-left-radius: 8px;
+    -moz-border-top-right-radius: 8px;
+    -moz-border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    color: #ffffff;
+    padding-left: 2.25vw;
+    padding-top: 1vw;
+    padding-bottom: 1vw;
+}
+
+select {
+    background-color: #555555;
+    border: none;
+    color: #ffffff;
+    width: 18vw;
+    height: 2vw;
+    font-size: 1.25vw;
+}
+
+#wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+#leftSide {
+    width: 18vw;
+    height: 100vh;
+}
+#rightSide {
+    width: 82vw;
+    height: 100vh;
+}
+
+#typeOfFile {
+    margin: 0;
+    padding: 0;
+    height: 6.5vw;
+
+}
+
+#settings {
+    display: block;
+    width: 45px;
+    margin: auto;
+}
+
+#settingsWrapper {
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    width: 100vw;
+    background-color: rgba(0,0,0,0.4);
+    position: fixed;
+    display: none;
+    z-index: 999999999;
+}
+
+#settingsBox {
+    margin: 0;
+    padding: 0;
+    width: 55vw;
+    height: 32.5vw;
+    margin: auto;
+    position: absolute;
+    top: 0; left: 0; bottom: 0; right: 0;
+    background-color: #333334;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+    
+}
+
+#close {
+    margin: 0;
+    padding: 0;
+    width: 1.75vw;
+    height: 1.75vw;
+    margin-left: 41.75vw;
+}
+
+#themes {
+    margin-top: 5vw;
+    margin-left: 6.2vw;
+}
+
+#font {
+    margin-top: 4vw;
+    margin-left: 8vw;
+}
+
+#size {
+    margin-top: 4vw;
+    margin-left: 6vw;
+}
+
+#current {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    font-family: 'Open Sans', sans-serif;
+    margin-left: 40vw;
+    margin-top: 2.5vw;
+    color: #ffffff;
+    font-size: 1.25vw;
+}
+
+#currentInput {
+    position: absolute;
+    font-family: 'Open Sans', sans-serif;
+    margin: 0;
+    padding: 0;
+    color: #ffffff;
+    font-size: 1.25vw;
+    margin-top: 2.5vw;
+    margin-left: 40vw;
+    display: none;
+}
+
+#currentInput input {
+    -webkit-border-radius: 3;
+    -moz-border-radius: 3;
+    border-radius: 3px;
+    border: none;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 1.25vw;
+    background-color: #555555;
+    color: #ffffff;
+}
+
+#currentButton {
+    position: absolute;
+    margin: 0;
+    padding: 0;
+    -webkit-border-radius: 3;
+    -moz-border-radius: 3;
+    border-radius: 3px;
+    font-family: 'Open Sans', sans-serif;
+    color: #ffffff;
+    font-size: 1.5vw;
+    background: #454f6d;
+    text-decoration: none;
+    border: none;
+    padding-top: 0.5vw;
+    padding-bottom: 0.5vw;
+    padding-left: 1.75vw;
+    padding-right: 1.75vw;
+    margin-top: 1.75vw;
+    margin-left: 65vw;
+    -moz-transition : 0.5s;
+    -webkit-transition : 0.5s;
+    transition : 0.5s;
+}
+
+.options {
+    font-family: 'Open Sans', sans-serif;
+    color: #bbbbbb;
+    font-size: 1.65vw;
+}
+

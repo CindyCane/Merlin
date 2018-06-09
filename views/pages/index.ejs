@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <% include ../partials/head %>
+</head>
+
+<body class="container">
+    <section id="settingsWrapper">
+        <% include ../partials/header %>
+    </section>
+
+    <div id="wrapper">
+        <section id="leftSide">
+            <h1>Merlin</h1>
+            <img id="settings" src="../assets/img/options.png" alt="Settings">
+        </section>
+        <section id="rightSide">
+            <div id="typeOfFile">
+                <p id="current">Current mode: <span id="modeinfo">text/plain</span></p>
+                <p id="currentInput">Type of file: <input type=text id="mode" placeholder="Enter file extension"></p>
+                <button id="currentButton" type=button>change mode</button>
+            </div>
+            <form id="codeWrapper">
+                <textarea id="code" name="code"></textarea>
+            </form>
+        </section>
+    </div>
+    <script src="https://www.gstatic.com/firebasejs/4.12.0/firebase.js"></script>
+    <script>
+        // Initialize Firebase
+        var config = {
+            apiKey: "YOUR API KEY",
+            authDomain: "YOUR AUTH DOMAIN",
+            databaseURL: "YOUR DATABASE URL",
+            projectId: "YOUR PROJECT ID",
+            storageBucket: "YOUR STORAGE BUCKET",
+            messagingSenderId: "YOUR MESSAGING SENDER ID"
+        };
+        firebase.initializeApp(config);
+
+        var database = firebase.database();
+
+    </script>
+    <script>
+        // init codemirror
+        CodeMirror.modeURL = "../assets/js/mode/%N/%N.js";
+        var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
+            lineNumbers: true,
+            styleActiveLine: true,
+            matchBrackets: true,
+            autofocus: true
+        });
+        // change mode function
+        var modeInput = document.getElementById("mode");
+        CodeMirror.on(modeInput, "keypress", function(e) {
+            if (e.keyCode == 13) change();
+        });
+
+        function change() {
+            var actualVal = modeInput.value;
+            var preval = "file." + actualVal;
+            var val = preval,
+                m, mode, spec;
+            if (actualVal === "") {
+                alert("Please enter a file extension");
+                return;
+            } else if (m = /.+\.([^.]+)$/.exec(val)) {
+                var info = CodeMirror.findModeByExtension(m[1]);
+                if (info) {
+                    mode = info.mode;
+                    spec = info.mime;
+                }
+            } else if (/\//.test(val)) {
+                var info = CodeMirror.findModeByMIME(val);
+                if (info) {
+                    mode = info.mode;
+                    spec = val;
+                }
+            } else {
+                mode = spec = val;
+            }
+            if (mode) {
+                editor.setOption("mode", spec);
+                CodeMirror.autoLoadMode(editor, mode);
+                document.getElementById("modeinfo").textContent = spec;
+            } else {
+                alert("Could not find a mode corresponding to ." + actualVal + " files");
+            }
+        }
+
+    </script>
+    <script>
+        // change theme function
+        var input = document.getElementById("select");
+
+        function selectTheme() {
+            var theme = input.options[input.selectedIndex].textContent;
+            editor.setOption("theme", theme);
+            location.hash = "#" + theme;
+        }
+        var choice = (location.hash && location.hash.slice(1)) ||
+            (document.location.search &&
+                decodeURIComponent(document.location.search.slice(1)));
+        if (choice) {
+            input.value = choice;
+            editor.setOption("theme", choice);
+        }
+        CodeMirror.on(window, "hashchange", function() {
+            var theme = location.hash.slice(1);
+            if (theme) {
+                input.value = theme;
+                selectTheme();
+            }
+        });
+
+    </script>
+    <script>
+        // open and close settings box
+        $("#settings").click(function() {
+            $("#settingsWrapper").fadeIn("fast");
+        });
+
+        $("#close").click(function() {
+            $("#settingsWrapper").fadeOut("fast");
+        });
+
+        // select font function
+        function selectFont() {
+            var inputFont = document.getElementById("fonts").value;
+
+            if (inputFont === "overpass") {
+                $(".CodeMirror").css("font-family", "'Space Mono', monospace");
+            } else if (inputFont === "source") {
+                $(".CodeMirror").css("font-family", "'Source Code Pro', monospace");
+            } else if (inputFont === "roboto") {
+                $(".CodeMirror").css("font-family", "'Roboto Mono', monospace");
+            } else {}
+        }
+
+        // select font size function
+        function selectFontSize() {
+            var inputFontsize = document.getElementById("fontsize").value;
+
+            if (inputFontsize === "small") {
+                $(".CodeMirror").css("font-size", "12px");
+            } else if (inputFontsize === "medium") {
+                $(".CodeMirror").css("font-size", "16px");
+            } else if (inputFontsize === "large") {
+                $(".CodeMirror").css("font-size", "20px");
+            } else {}
+        }
+        var modeSwitch = false;
+
+        // mode changing button
+        $("#currentButton").click(function() {
+            if (modeSwitch === false) {
+                $("#current").fadeOut("fast");
+                $("#currentInput").fadeIn("fast");
+                $("#currentButton").css("background", "#5bb058");
+                $("#mode").val("");
+                modeSwitch = true;
+            } else if (modeSwitch === true) {
+                change();
+                $("#current").fadeIn("fast");
+                $("#currentInput").fadeOut("fast");
+                $("#currentButton").css("background", "#454f6d");
+                modeSwitch = false;
+            }
+        });
+
+        // resize textarea with resizing window
+        function resize() {
+            var windowHeight = $(window).height();
+            var topRightHeight = $("#typeOfFile").height();
+            var codeHeight = windowHeight - topRightHeight;
+            $(".CodeMirror").height(codeHeight);
+
+            var topLeftHeight = $("h1").height();
+            var settingsMargin = windowHeight - topLeftHeight - 100;
+            $("#settings").css("margin-top", settingsMargin);
+        }
+
+        $(window).resize(function() {
+            resize();
+        });
+
+        $(document).ready(function() {
+            resize();
+        });
+
+    </script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        // send data to server
+        $(function() {
+            var socket = io();
+            $('#codeWrapper').keydown(function() {
+                setTimeout(function() {
+                    var codeOrigin = editor.getValue()
+                    socket.emit('the code', codeOrigin);
+                    var newClientKey = database.ref().push().key;
+                    database.ref('/code').set(codeOrigin);
+                }, 1);
+
+            });
+            // receive data from server from socket.io
+            socket.on('the code', function(code) {
+                var cursorPosition = editor.getCursor();
+                var cursorLine = cursorPosition.line;
+                var cursorCh = cursorPosition.ch;
+                editor.setValue(code);
+                editor.focus();
+                editor.setCursor({
+                    line: cursorLine,
+                    ch: cursorCh
+                });
+            });
+        });
+
+        function initCode() {
+            var codeRef = database.ref('code');
+            codeRef.once('value', function(snapshot) {
+                editor.setValue(snapshot.val());
+            });
+        }
+
+        $(document).ready(function() {
+            initCode();
+        });
+    </script>
+
+</body>
+
+</html>
